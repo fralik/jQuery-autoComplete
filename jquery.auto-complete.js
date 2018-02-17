@@ -71,7 +71,7 @@
             });
 
             that.sc.on('mousedown click', '.autocomplete-suggestion', function (e){
-                var item = $(this), v = item.data('val');
+                var item = $(this), v = item.attr('data-val');
                 if (v || item.hasClass('autocomplete-suggestion')) { // else outside click
                     that.val(v);
                     o.onSelect(e, v, item);
@@ -117,7 +117,7 @@
                         else { sel.removeClass('selected'); next = 0; }
                     }
                     if (o.liveValue) {
-                        that.val(next ? next.data('val') : that.last_val);
+                        that.val(next ? next.attr('data-val') : that.last_val);
                     }
                     that.updateSC(0, next);
                     return false;
@@ -126,7 +126,7 @@
                 else if (e.which == 27) that.val(that.last_val).sc.hide();
                 // enter or tab
                 else if (e.which == 13 || e.which == 9) {
-                    var sel = $('.autocomplete-suggestion.selected', that.sc), v = sel.data('val');
+                    var sel = $('.autocomplete-suggestion.selected', that.sc), v = sel.attr('data-val');
                     if (sel.length && that.sc.is(':visible')) {
                         that.val(v);
                         o.onSelect(e, v, sel);
