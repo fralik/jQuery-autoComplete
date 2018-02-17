@@ -110,11 +110,14 @@
                     var next, sel = $('.autocomplete-suggestion.selected', that.sc);
                     if (!sel.length) {
                         next = (e.which == 40) ? $('.autocomplete-suggestion', that.sc).first() : $('.autocomplete-suggestion', that.sc).last();
-                        that.val(next.addClass('selected').data('val'));
+                        next.addClass('selected');
                     } else {
                         next = (e.which == 40) ? sel.next('.autocomplete-suggestion') : sel.prev('.autocomplete-suggestion');
-                        if (next.length) { sel.removeClass('selected'); that.val(next.addClass('selected').data('val')); }
-                        else { sel.removeClass('selected'); that.val(that.last_val); next = 0; }
+                        if (next.length) { sel.removeClass('selected'); next.addClass('selected'); }
+                        else { sel.removeClass('selected'); next = 0; }
+                    }
+                    if (o.liveValue) {
+                        that.val(next ? next.data('val') : that.last_val);
                     }
                     that.updateSC(0, next);
                     return false;
@@ -123,8 +126,12 @@
                 else if (e.which == 27) that.val(that.last_val).sc.hide();
                 // enter or tab
                 else if (e.which == 13 || e.which == 9) {
-                    var sel = $('.autocomplete-suggestion.selected', that.sc);
-                    if (sel.length && that.sc.is(':visible')) { o.onSelect(e, sel.data('val'), sel); setTimeout(function(){ that.sc.hide(); }, 20); }
+                    var sel = $('.autocomplete-suggestion.selected', that.sc), v = sel.data('val');
+                    if (sel.length && that.sc.is(':visible')) {
+                        that.val(v);
+                        o.onSelect(e, v, sel);
+                        setTimeout(function(){ that.sc.hide(); }, 20);
+                    }
                 }
             });
 
@@ -159,6 +166,7 @@
         minChars: 3,
         delay: 150,
         cache: 1,
+        liveValue: 1,
         menuClass: '',
         renderItem: function (item, search){
             // escape special characters
