@@ -1,5 +1,5 @@
 /*
-    jQuery autoComplete v1.0.7-tizra.1
+    jQuery autoComplete v1.0.7-tizra.2
     Copyright (c) 2014 Simon Steinberger / Pixabay
     License: http://www.opensource.org/licenses/mit-license.php
     @preserve (for uglifyjs)
