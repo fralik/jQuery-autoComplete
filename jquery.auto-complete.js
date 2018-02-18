@@ -123,7 +123,14 @@
                     return false;
                 }
                 // esc
-                else if (e.which == 27) that.val(that.last_val).sc.hide();
+                else if (e.which == 27) {
+                    var sel = $('.autocomplete-suggestion.selected', that.sc);
+                    if (that.sc.is(':visible')) {
+                        if (sel.length) that.val(that.last_val);
+                        that.sc.hide();
+                        return false;
+                    }
+                }
                 // enter or tab
                 else if (e.which == 13 || e.which == 9) {
                     var sel = $('.autocomplete-suggestion.selected', that.sc), v = sel.attr('data-val');
@@ -131,6 +138,8 @@
                         that.val(v);
                         o.onSelect(e, v, sel);
                         that.sc.hide();
+                        if (e.which == 13 && !o.propagateEnter) return false;
+                        if (e.which == 9 && !o.propagateTab) return false;
                     }
                 }
             });
@@ -167,6 +176,8 @@
         delay: 150,
         cache: 1,
         liveValue: 1,
+        propagateTab: 1,
+        propagateEnter: 1,
         menuClass: '',
         renderItem: function (item, search){
             // escape special characters
