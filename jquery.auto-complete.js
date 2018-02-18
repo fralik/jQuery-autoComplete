@@ -130,7 +130,7 @@
                     if (sel.length && that.sc.is(':visible')) {
                         that.val(v);
                         o.onSelect(e, v, sel);
-                        setTimeout(function(){ that.sc.hide(); }, 20);
+                        that.sc.hide();
                     }
                 }
             });
