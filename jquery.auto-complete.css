@@ -17,12 +17,15 @@
 .autocomplete-suggestion {
     position: relative;
     padding: 0 .6em;
-    line-height: 23px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 1.02em;
     color: #333;
+    /* for below styles, match semantic presentation */
+    font-size: 1em;
+    line-height: 1;
+    padding-top: 0.78571429rem;
+    padding-bottom: 0.78571429rem;
 }
 .autocomplete-suggestion b {
     font-weight: normal;
