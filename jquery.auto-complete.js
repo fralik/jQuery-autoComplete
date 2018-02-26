@@ -134,12 +134,16 @@
                 // enter or tab
                 else if (e.which == 13 || e.which == 9) {
                     var sel = $('.autocomplete-suggestion.selected', that.sc), v = sel.attr('data-val');
-                    if (sel.length && that.sc.is(':visible')) {
-                        that.val(v);
-                        o.onSelect(e, v, sel);
+                    if (that.sc.is(':visible')) {
+                        if (sel.length) {
+                            that.val(v);
+                            o.onSelect(e, v, sel);
+                        }
                         that.sc.hide();
-                        if (e.which == 13 && !o.propagateEnter) return false;
-                        if (e.which == 9 && !o.propagateTab) return false;
+                        if (sel.length) {
+                            if (e.which == 13 && !o.propagateEnter) return false;
+                            if (e.which == 9 && !o.propagateTab) return false;
+                        }
                     }
                 }
             });
