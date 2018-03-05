@@ -91,17 +91,22 @@
 
             if (!o.minChars) that.on('focus.autocomplete', function(){ that.last_val = '\n'; that.trigger('keyup.autocomplete'); });
 
-            function suggest(data){
-                var val = that.val();
+            function suggest(data, val) {
                 that.cache[val] = data;
-                if (data.length && val.length >= o.minChars) {
+                if (! data.length) {
+                    that.sc.hide();
+                } else if (
+                    // protect against races between completers
+                    val === that.val() &&
+                    // protect against opening completions after tabbing
+                    // away
+                    that.is(':focus')
+                ) {
                     var s = '';
                     for (var i=0;i<data.length;i++) s += o.renderItem(data[i], val);
                     that.sc.html(s);
                     that.updateSC(0);
                 }
-                else
-                    that.sc.hide();
             }
 
             that.on('keydown.autocomplete', function(e){
@@ -156,14 +161,22 @@
                             that.last_val = val;
                             clearTimeout(that.timer);
                             if (o.cache) {
-                                if (val in that.cache) { suggest(that.cache[val]); return; }
+                                if (val in that.cache) {
+                                    suggest(that.cache[val], val);
+                                    return;
+                                }
                                 // no requests if previous suggestions were empty
                                 for (var i=1; i<val.length-o.minChars; i++) {
                                     var part = val.slice(0, val.length-i);
-                                    if (part in that.cache && !that.cache[part].length) { suggest([]); return; }
+                                    if (part in that.cache && !that.cache[part].length) {
+                                        suggest([], val);
+                                        return;
+                                    }
                                 }
                             }
-                            that.timer = setTimeout(function(){ o.source(val, suggest) }, o.delay);
+                            that.timer = setTimeout(function(){
+                                o.source(val, function(data){suggest(data, val)}, o.delay);
+                            });
                         }
                     } else {
                         that.last_val = val;
