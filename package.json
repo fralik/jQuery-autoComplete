@@ -1,0 +1,16 @@
+{
+  "name": "jquery-autocomplete",
+  "version": "1.0.7",
+  "description": "https://goodies.pixabay.com/jquery/auto-complete/demo.html",
+  "main": "jquery.auto-complete.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pixabay/jQuery-autoComplete.git"
+  },
+  "author": "Pixabay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pixabay/jQuery-autoComplete/issues"
+  },
+  "homepage": "https://github.com/Pixabay/jQuery-autoComplete"
+}
