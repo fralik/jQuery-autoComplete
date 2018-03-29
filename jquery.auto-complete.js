@@ -35,6 +35,7 @@
             that.attr('autocomplete', 'off');
             that.cache = {};
             that.last_val = '';
+            that.submitting = false;
 
             that.updateSC = function(resize, next){
                 that.sc.css({
@@ -98,9 +99,10 @@
                 } else if (
                     // protect against races between completers
                     val === that.val() &&
-                    // protect against opening completions after tabbing
-                    // away
-                    that.is(':focus')
+                    // protect against completions after tabbing away
+                    that.is(':focus') &&
+                    // protect against completions after submit
+                    ! that.submitting
                 ) {
                     var s = '';
                     for (var i=0;i<data.length;i++) s += o.renderItem(data[i], val);
@@ -110,6 +112,9 @@
             }
 
             that.on('keydown.autocomplete', function(e){
+                // always clear the submitting flag on keyboard input
+                that.submitting = false;
+
                 // down (40), up (38)
                 if ((e.which == 40 || e.which == 38) && that.sc.html()) {
                     var next, sel = $('.autocomplete-suggestion.selected', that.sc);
@@ -149,6 +154,14 @@
                             if (e.which == 13 && !o.propagateEnter) return false;
                             if (e.which == 9 && !o.propagateTab) return false;
                         }
+                    }
+                    if (e.which == 13) {
+                        // there can be a race if we are fetching
+                        // completions at the same time that the user
+                        // ajax-submits the form with the enter key. Ensure
+                        // that submitting the form isn't shortly followed
+                        // by showing the completions box.
+                        that.submitting = true;
                     }
                 }
             });
