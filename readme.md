@@ -1,6 +1,23 @@
 jQuery-autoComplete
 ===================
 
+## Differences from the original project
+
+This is a fork of Tizra repo rather than the original one. As of May 2018, original repo seems to be abandoned and Tizra's contains the most of the new things.
+
+This modification uses [Clusterize.js](https://clusterize.js.org/) to show the suggested items. This allows to handle huge data sets. The main purpose of this repo is to be used with [jQuery Query Builder](https://querybuilder.js.org).
+
+### Build
+
+You can use Node to build minified version of the script:
+
+```
+npm install
+npm run-script build
+```
+
+## Content of original readme from Pixabay
+
 An extremely lightweight completion suggester plugin for jQuery.
 
 Compatible with jQuery 1.7.0+ in Firefox, Safari, Chrome, Opera, Internet Explorer 7+. No dependencies except the jQuery library.
