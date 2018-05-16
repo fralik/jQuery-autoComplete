@@ -2,15 +2,25 @@
   "name": "jquery-autocomplete",
   "version": "1.0.7",
   "description": "https://goodies.pixabay.com/jquery/auto-complete/demo.html",
+  "devDependencies": {
+    "uglify-js": "^3.3.25"
+  },
   "main": "jquery.auto-complete.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pixabay/jQuery-autoComplete.git"
+    "url": "git+https://github.com/fralik/jQuery-autoComplete.git"
   },
   "author": "Pixabay",
+  "contributors": [
+    "Vadim Frolov <mail@vadimfrolov.com>",
+    "Aron Griffis"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pixabay/jQuery-autoComplete/issues"
+    "url": "https://github.com/fralik/jQuery-autoComplete/issues"
   },
-  "homepage": "https://github.com/Pixabay/jQuery-autoComplete"
+  "homepage": "https://github.com/fralik/jQuery-autoComplete",
+  "scripts": {
+    "build": "uglifyjs jquery.auto-complete.js --comments --compress --verbose -o jquery.auto-complete.min.js"
+  }
 }

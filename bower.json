@@ -10,6 +10,11 @@
         "name": "Simon Steinberger",
         "url": "https://pixabay.com/users/Simon/",
         "email": "simon@pixabay.com"
+    },
+    {
+        "name": "Vadim Frolov",
+        "url": "https://github.com/fralik/",
+        "email": "mail@vadimfrolov.com"
     }],
     "keywords": [
         "autocomplete",
@@ -30,6 +35,7 @@
         "bower.json",
         "demo.html",
         "auto-complete.jquery.json",
-        "readme.md"
+        "readme.md",
+        "package.json"
     ]
 }

@@ -1,6 +1,7 @@
 /*
-    jQuery autoComplete v1.0.7-tizra.5
+    jQuery autoComplete v1.0.7-fralik.1
     Copyright (c) 2014 Simon Steinberger / Pixabay
+              (c) 2018 Vadim Frolov
     License: http://www.opensource.org/licenses/mit-license.php
     @preserve (for uglifyjs)
 */
