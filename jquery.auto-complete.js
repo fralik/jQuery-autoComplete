@@ -51,7 +51,7 @@
                 } else {
                     that.sc.css({
                         width: that.outerWidth(),
-                        top: -that.sc.outerHeight(),
+                        top: -that.sc.outerHeight() + 2,
                     });
                 }
                 if (!resize) {
@@ -114,7 +114,7 @@
             if (!o.minChars) that.on('focus.autocomplete', function(){ that.last_val = '\n'; that.trigger('keyup.autocomplete'); });
 
             function suggest(data, val) {
-                let last_data = that.cache[val];
+                var last_data = that.cache[val];
                 that.cache[val] = data;
                 if (! data.length) {
                     that.sc.hide();
@@ -132,7 +132,7 @@
                         return;
                     }
 
-                    let s = [];
+                    var s = [];
                     for (var i=0;i<data.length;i++) {
                         s.push(o.renderItem(data[i], val));
                     }
