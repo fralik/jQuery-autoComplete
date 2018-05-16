@@ -7,14 +7,14 @@
 */
 
 (function($){
-    $.fn.autoComplete = function(options){
+    $.fn.autoComplete = function(options) {
         var o = $.extend({}, $.fn.autoComplete.defaults, options);
-
         // public methods
         if (typeof options == 'string') {
             this.each(function(){
                 var that = $(this);
                 if (options == 'destroy') {
+                    that.clusterize.destroy(true);
                     $(window).off('resize.autocomplete', that.updateSC);
                     that.off('blur.autocomplete focus.autocomplete keydown.autocomplete keyup.autocomplete');
                     if (that.data('autocomplete'))
@@ -30,20 +30,30 @@
 
         return this.each(function(){
             var that = $(this);
+            // unique ID for the container
+            that.contentId = o.id || 'autocomplete-cont-' + Math.random().toString(36).substring(2, 7);
             // sc = 'suggestions container'
-            that.sc = $('<div class="autocomplete-suggestions '+o.menuClass+'"></div>');
+            that.sc = $('<div id="'+that.contentId+'" class="autocomplete-suggestions '+o.menuClass+'"></div>');
             that.data('sc', that.sc).data('autocomplete', that.attr('autocomplete'));
             that.attr('autocomplete', 'off');
             that.cache = {};
             that.last_val = '';
             that.submitting = false;
+            that.attachedToBody = false;
 
             that.updateSC = function(resize, next){
-                that.sc.css({
-                    top: that.offset().top + that.outerHeight(),
-                    left: that.offset().left,
-                    width: that.outerWidth()
-                });
+                if (that.attachedToBody) {
+                    that.sc.css({
+                        width: that.outerWidth(),
+                        top: that.offset().top - that.sc.outerHeight(),
+                        left: that.offset().left,
+                    });
+                } else {
+                    that.sc.css({
+                        width: that.outerWidth(),
+                        top: -that.sc.outerHeight(),
+                    });
+                }
                 if (!resize) {
                     that.sc.show();
                     if (!that.sc.maxHeight) that.sc.maxHeight = parseInt(that.sc.css('max-height'));
@@ -58,10 +68,20 @@
                                 that.sc.scrollTop(selTop + scrTop);
                         }
                 }
+                that.clusterize.refresh();
             }
             $(window).on('resize.autocomplete', that.updateSC);
 
-            that.sc.appendTo('body');
+            if (that.parent()) {
+                that.sc.appendTo(that.parent());
+            } else {
+                that.sc.appendTo('body');
+                that.attachedToBody = true;
+            }
+            that.clusterize = new Clusterize({
+                scrollElem: that.sc[0],
+                contentElem: that.sc[0],
+            });
 
             that.sc.on('mouseleave', '.autocomplete-suggestion', function (){
                 $('.autocomplete-suggestion.selected').removeClass('selected');
@@ -94,6 +114,7 @@
             if (!o.minChars) that.on('focus.autocomplete', function(){ that.last_val = '\n'; that.trigger('keyup.autocomplete'); });
 
             function suggest(data, val) {
+                let last_data = that.cache[val];
                 that.cache[val] = data;
                 if (! data.length) {
                     that.sc.hide();
@@ -105,9 +126,17 @@
                     // protect against completions after submit
                     ! that.submitting
                 ) {
-                    var s = '';
-                    for (var i=0;i<data.length;i++) s += o.renderItem(data[i], val);
-                    that.sc.html(s);
+                    // check if data has changed. Perhaps we do not neet to recreate it
+                    if (last_data == data) {
+                        that.updateSC(0);
+                        return;
+                    }
+
+                    let s = [];
+                    for (var i=0;i<data.length;i++) {
+                        s.push(o.renderItem(data[i], val));
+                    }
+                    that.clusterize.update(s);
                     that.updateSC(0);
                 }
             }
@@ -210,6 +239,8 @@
         propagateTab: 1,
         propagateEnter: 1,
         menuClass: '',
+        // User-defined ID of the auto-complete container. If empty, ID will be generated.
+        id: '',
         renderItem: function (item, search){
             // escape special characters
             search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
